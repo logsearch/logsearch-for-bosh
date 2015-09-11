@@ -40,6 +40,7 @@ case $1 in
       fi
     done
 
+    chown --recursive vcap:vcap /var/vcap/packages/logstash
 
     exec chpst -u vcap /var/vcap/packages/logstash/logstash/bin/logstash agent \
          -f ${JOB_DIR}/config/logstash.conf -w ${LOGSTASH_WORKERS} \
