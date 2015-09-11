@@ -1,0 +1,3 @@
+if [@type] == "NATS" {
+<%= File.read('src/logstash-filters/snippets/bosh_nats.conf').gsub(/^/, '  ') %>
+}
