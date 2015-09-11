@@ -1,0 +1,5 @@
+check process ingestor_nats
+  with pidfile /var/vcap/sys/run/ingestor_nats/ingestor_nats.pid
+  start program "/var/vcap/jobs/ingestor_nats/bin/monit_debugger ingestor_nats_ctl '/var/vcap/jobs/ingestor_nats/bin/ingestor_nats_ctl start'"
+  stop program "/var/vcap/jobs/ingestor_nats/bin/monit_debugger ingestor_nats_ctl '/var/vcap/jobs/ingestor_nats/bin/ingestor_nats_ctl stop'"
+  group vcap
