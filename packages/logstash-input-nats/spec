@@ -1,4 +1,5 @@
 ---
 name: logstash-input-nats
 dependencies: []
-files: []
+files: 
+ - logstash-input-nats/logstash-input-nats-0.1.0.gem

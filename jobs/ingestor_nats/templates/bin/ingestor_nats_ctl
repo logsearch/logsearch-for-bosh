@@ -8,6 +8,15 @@ source /var/vcap/jobs/ingestor_nats/helpers/ctl_setup.sh 'ingestor_nats'
 
 export PORT=${PORT:-5000}
 export LANG=en_US.UTF-8
+# 1 logstash worker / CPU core
+export LOGSTASH_WORKERS=`grep -c ^processor /proc/cpuinfo`
+
+<% extra_logstash_plugins = { 
+  'logstash-input-nats' => '/var/vcap/packages/logstash-input-nats/logstash-input-nats-0.1.0.gem'
+} %>
+LOCAL_PLUGINS_DIR=/var/vcap/packages/logstash/logstash/vendor/bundle/jruby/1.9/gems
+LOCAL_PLUGINS_NAME_LIST=$( cat /var/vcap/packages/logstash/plugins-default.list | tr "\n" ' ' )
+LOCAL_PLUGINS_NAME_LIST=" ${LOCAL_PLUGINS_NAME_LIST} <%= extra_logstash_plugins.keys.join(' ') %> "
 
 case $1 in
 
@@ -17,7 +26,23 @@ case $1 in
     # store pid in $PIDFILE
     echo $$ > $PIDFILE
 
-    exec chpst -u vcap:vcap ingestor_nats \
+    # install new plugins
+    <% extra_logstash_plugins.each do | pname, psource | %>
+      if ! ls ${LOCAL_PLUGINS_DIR}/<%= pname %>-* 1> /dev/null 2>&1 ; then
+          /var/vcap/packages/logstash/logstash/bin/plugin install '<%= psource %>'
+      fi
+    <% end %>
+
+    # remove old plugins
+    for LOCAL_PLUGIN_NAME in $( /var/vcap/packages/logstash/logstash/bin/plugin list ) ; do
+      if ! [[ "${LOCAL_PLUGINS_NAME_LIST}" =~ (^| )$LOCAL_PLUGIN_NAME($| ) ]] ; then
+        /var/vcap/packages/logstash/logstash/bin/plugin uninstall "${LOCAL_PLUGIN_NAME}"
+      fi
+    done
+
+
+    exec chpst -u vcap /var/vcap/packages/logstash/logstash/bin/logstash agent \
+         -f ${JOB_DIR}/config/logstash.conf -w ${LOGSTASH_WORKERS} \
          >>$LOG_DIR/$JOB_NAME.stdout.log \
          2>>$LOG_DIR/$JOB_NAME.stderr.log
 

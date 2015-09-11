@@ -1,0 +1,38 @@
+input {
+	nats {
+		server_uris => [<%= p("logstash_ingestor.nats.server_uris").map {|str| "\"#{str}\""}.join(',') %>]
+		subject => "<%= p("logstash_ingestor.nats.subject")%>"
+	}
+}
+
+filter {
+  <% if 'DEBUG' == p('logstash.metadata_level') %>
+	mutate {
+		add_field => [ "@ingestor[service]", "syslog" ]
+		add_field => [ "@ingestor[job]", "<%= name %>/<%= index %>" ]
+	}
+
+	ruby {
+		code => "event['@ingestor[timestamp]'] = Time.now.iso8601(3)"
+	}
+  <% end %>
+
+  <%= p('logstash_ingestor.filters') %>
+}
+
+output {
+	<% if p("logstash_ingestor.debug") %>
+        stdout {
+            codec => "json"
+        }
+	<% end %>
+	
+	redis {
+		host => "<%= p("redis.host") %>"
+		port => "<%= p("redis.port") %>"
+		data_type => "list"
+		key => "<%= p("redis.key") %>"
+		batch => true
+		batch_events => 50
+	}
+}
