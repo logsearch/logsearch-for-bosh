@@ -1,1 +1,5 @@
---- {}
+---
+logstash-input-nats/logstash-input-nats-0.1.0.gem:
+  object_id: 4581a101-d113-4397-b108-1a7fc9b88395
+  sha: 5d03e60e05ae47cf5778a5dbd408fff287c9aeb9
+  size: 26624
