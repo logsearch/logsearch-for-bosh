@@ -1,0 +1,102 @@
+<% require 'json' %>
+{
+  "title": "hm_agent_hearbeat - disk usage percent",
+  "visState": "<%= JSON.parse(<<'ENDOFFJSON').to_json.gsub(/"/) { '\"' }
+    {
+      "type": "line",
+      "params": {
+        "shareYAxis": true,
+        "addTooltip": true,
+        "addLegend": false,
+        "showCircles": false,
+        "smoothLines": true,
+        "interpolate": "linear",
+        "scale": "linear",
+        "drawLinesBetweenPoints": true,
+        "radiusRatio": 9,
+        "times": [
+    
+        ],
+        "addTimeMarker": true,
+        "defaultYExtents": false,
+        "setYExtents": false,
+        "yAxis": {
+        }
+      },
+      "aggs": [
+        {
+          "id": "1",
+          "type": "max",
+          "schema": "metric",
+          "params": {
+            "field": "vitals.disk.system.percent"
+          }
+        },
+        {
+          "id": "2",
+          "type": "date_histogram",
+          "schema": "segment",
+          "params": {
+            "field": "@timestamp",
+            "interval": "auto",
+            "customInterval": "2h",
+            "min_doc_count": 1,
+            "extended_bounds": {
+            }
+          }
+        },
+        {
+          "id": "3",
+          "type": "terms",
+          "schema": "group",
+          "params": {
+            "field": "job_and_index",
+            "size": 50,
+            "order": "desc",
+            "orderBy": "1"
+          }
+        },
+        {
+          "id": "4",
+          "type": "max",
+          "schema": "metric",
+          "params": {
+            "field": "vitals.disk.ephemeral.percent"
+          }
+        },
+        {
+          "id": "5",
+          "type": "max",
+          "schema": "metric",
+          "params": {
+            "field": "vitals.disk.persistent.percent"
+          }
+        },
+        {
+          "id": "6",
+          "type": "max",
+          "schema": "metric",
+          "params": {
+            "field": "vitals.swap.percent"
+          }
+        }
+      ],
+      "listeners": {
+      }
+    }
+ENDOFFJSON
+%>",
+  "description": "",
+  "savedSearchId": "hm_agent_heartbeat",
+  "version": 1,
+  "kibanaSavedObjectMeta": {
+    "searchSourceJSON": "<%= JSON.parse(<<'ENDOFFJSON').to_json.gsub(/"/) { '\"' }
+    {
+      "filter": [
+    
+      ]
+    }
+ENDOFFJSON
+%>"
+  }
+}

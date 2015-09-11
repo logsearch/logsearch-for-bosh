@@ -1,0 +1,61 @@
+<% require 'json' %>
+{
+  "title": "hm_agent_hearbeat - jobs and job_state",
+  "visState": "<%= JSON.parse(<<'ENDOFFJSON').to_json.gsub(/"/) { '\"' }
+    {
+      "type": "table",
+      "params": {
+        "perPage": 25,
+        "showPartialRows": false,
+        "showMeticsAtAllLevels": false
+      },
+      "aggs": [
+        {
+          "id": "1",
+          "type": "count",
+          "schema": "metric",
+          "params": {
+          }
+        },
+        {
+          "id": "2",
+          "type": "terms",
+          "schema": "bucket",
+          "params": {
+            "field": "job",
+            "size": 100,
+            "order": "desc",
+            "orderBy": "1"
+          }
+        },
+        {
+          "id": "3",
+          "type": "terms",
+          "schema": "bucket",
+          "params": {
+            "field": "job_state",
+            "size": 5,
+            "order": "desc",
+            "orderBy": "1"
+          }
+        }
+      ],
+      "listeners": {
+      }
+    }
+ENDOFFJSON
+%>",
+  "description": "",
+  "savedSearchId": "hm_agent_heartbeat",
+  "version": 1,
+  "kibanaSavedObjectMeta": {
+    "searchSourceJSON": "<%= JSON.parse(<<'ENDOFFJSON').to_json.gsub(/"/) { '\"' }
+    {
+      "filter": [
+    
+      ]
+    }
+ENDOFFJSON
+%>"
+  }
+}

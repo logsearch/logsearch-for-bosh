@@ -70,12 +70,14 @@ def export_kibana_config ( es_host, type, name )
 end
 
 export_kibana_config es_host, 'index-pattern' ,'[logstash-]YYYY.MM.DD'
-export_kibana_config es_host, 'config' ,'4.2.0-snapshot'
+export_kibana_config es_host, 'config' ,'4.1.1'
 
 # BOSH Health Monitor 
-export_kibana_config es_host, 'dashboard', 'CF-App-Location'
-export_kibana_config es_host, 'visualization', 'LogMessages-RTR-Map'
-export_kibana_config es_host, 'visualization', 'LogMessages-RTR:-App-names'
-export_kibana_config es_host, 'visualization', 'LogMessages-RTR-by-IP-timezone'
-export_kibana_config es_host, 'visualization', 'LogMessages-by-cf_app_name'
-export_kibana_config es_host, 'search', 'LogMessages'
+export_kibana_config es_host, 'dashboard', 'Health-Monitor-Heartbeats'
+export_kibana_config es_host, 'visualization', 'hm_agent_hearbeat-disk-usage-percent'
+export_kibana_config es_host, 'visualization', 'hm_agent_hearbeat-jobs-and-job_state'
+export_kibana_config es_host, 'visualization', 'hm_agent_hearbeat-vitals.cpu.user'
+export_kibana_config es_host, 'visualization', 'hm_agent_heartbeat-job-load'
+export_kibana_config es_host, 'visualization', 'hm_agent_heartbeat-job-load'
+export_kibana_config es_host, 'visualization', 'hm_agent_heartbeat-vitals.mem.percent'
+export_kibana_config es_host, 'search', 'hm_agent_heartbeat'
