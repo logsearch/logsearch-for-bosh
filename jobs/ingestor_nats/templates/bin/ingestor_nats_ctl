@@ -26,23 +26,36 @@ case $1 in
     # store pid in $PIDFILE
     echo $$ > $PIDFILE
 
+    while [ ! -d /var/vcap/packages/logstash ];
+    do
+       echo "Waiting 2 seconds for /var/vcap/packages/logstash to exist..."
+       sleep 2;
+    done;
+    
+    #Make a copy of /var/vcap/packages/logstash
+    if [ ! -d /var/vcap/packages/logstash-for-ingestor_nats ]; then
+       echo "Waiting 15 sec for /var/vcap/packages/logstash to be populated, then making a copy to /var/vcap/packages/logstash-for-ingestor_nats ..."
+       sleep 15
+       cp -R -L /var/vcap/packages/logstash /var/vcap/packages/logstash-for-ingestor_nats
+    fi
+
     # install new plugins
     <% extra_logstash_plugins.each do | pname, psource | %>
       if ! ls ${LOCAL_PLUGINS_DIR}/<%= pname %>-* 1> /dev/null 2>&1 ; then
-          /var/vcap/packages/logstash/logstash/bin/plugin install '<%= psource %>'
+          /var/vcap/packages/logstash-for-ingestor_nats/logstash/bin/plugin install --no-verify '<%= psource %>'
       fi
     <% end %>
 
     # remove old plugins
     for LOCAL_PLUGIN_NAME in $( /var/vcap/packages/logstash/logstash/bin/plugin list ) ; do
       if ! [[ "${LOCAL_PLUGINS_NAME_LIST}" =~ (^| )$LOCAL_PLUGIN_NAME($| ) ]] ; then
-        /var/vcap/packages/logstash/logstash/bin/plugin uninstall "${LOCAL_PLUGIN_NAME}"
+        /var/vcap/packages/logstash-for-ingestor_nats/logstash/bin/plugin uninstall "${LOCAL_PLUGIN_NAME}"
       fi
     done
 
-    chown --recursive vcap:vcap /var/vcap/packages/logstash
+    chown --recursive vcap:vcap /var/vcap/packages/logstash-for-ingestor_nats
 
-    exec chpst -u vcap /var/vcap/packages/logstash/logstash/bin/logstash agent \
+    exec chpst -u vcap /var/vcap/packages/logstash-for-ingestor_nats/logstash/bin/logstash agent \
          -f ${JOB_DIR}/config/logstash.conf -w ${LOGSTASH_WORKERS} \
          >>$LOG_DIR/$JOB_NAME.stdout.log \
          2>>$LOG_DIR/$JOB_NAME.stderr.log
