@@ -1,0 +1,29 @@
+#!/bin/bash
+
+set -e
+
+ES_URL="http://<% p('elasticsearch.host')%>:<% p('elasticsearch.port')%>"
+
+#
+# wait for elasticsearch availability
+#
+
+READY=false
+
+while [ "false" == "$READY" ] ; do
+    STATUS=$(curl -s "$ES_URL/_cat/health?h=status" | tr -d '[:space:]')
+
+    if [ "green" == "$STATUS" ] || [ "yellow" == "$STATUS" ] ; then
+        READY=true
+    else
+        sleep 1
+    fi
+done
+
+
+#
+# Send Kibana4 config as single bulk request
+#
+
+cat var/vcap/packages/kibana4_setup/kibana4-dashboards.json | curl --data-binary @- $ES_URL/_bulk
+

@@ -1,0 +1,5 @@
+check process kibana4_setup
+  with pidfile /var/vcap/sys/run/kibana4_setup/job.pid
+  start program "/var/vcap/jobs/kibana4_setup/bin/job.process start"
+  stop program "/var/vcap/jobs/kibana4_setup/bin/job.process stop"
+  group vcap

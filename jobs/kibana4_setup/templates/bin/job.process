@@ -1,0 +1,42 @@
+#!/bin/bash
+
+set -e
+set -u
+
+PIDFILE=/var/vcap/sys/run/kibana4_setup/job.pid
+LOGDIR=/var/vcap/sys/log/kibana4_setup
+
+mkdir -p `dirname "$PIDFILE"`
+chown vcap:vcap `dirname "$PIDFILE"`
+
+mkdir -p "$LOGDIR"
+chown vcap:vcap "$LOGDIR"
+
+exec >> /var/vcap/sys/log/kibana4_setup/job.control.log
+exec 2>&1
+
+case $1 in
+
+  start)
+    echo $$ > "${PIDFILE}"
+
+    /var/vcap/jobs/kibana4_setup/bin/run
+
+    # pretend we're still running to keep monit happy
+    echo 1 > "${PIDFILE}"
+
+    ;;
+
+  stop)
+    rm -f "${PIDFILE}"
+
+    ;;
+
+  *)
+    echo "Usage: control {start|stop}" >&2
+
+    exit 1
+
+    ;;
+
+esac

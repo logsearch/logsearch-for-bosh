@@ -1,0 +1,5 @@
+---
+name: kibana4_setup
+dependencies: []
+files: 
+  - logsearch-addon/target/kibana4-dashboards.json

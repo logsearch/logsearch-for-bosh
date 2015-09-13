@@ -1,0 +1,13 @@
+---
+name: "kibana4_setup"
+packages:
+  - "kibana4_setup"
+templates:
+  bin/run.erb: "bin/run"
+  bin/job.process: "bin/job.process"
+properties:
+  elasticsearch.host:
+    description: IP / DNS of elasticsearch http endpoint
+  elasticsearch.port:
+    description: Port of elasticsearch http (admin) endpoint
+    default: 9200
