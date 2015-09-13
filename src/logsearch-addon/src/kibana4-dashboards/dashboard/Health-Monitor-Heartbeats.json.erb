@@ -10,13 +10,13 @@
         "id": "hm_agent_hearbeat-jobs-and-job_state",
         "row": 1,
         "size_x": 2,
-        "size_y": 9,
+        "size_y": 7,
         "type": "visualization"
       },
       {
         "col": 1,
         "id": "hm_agent_heartbeat-job-load",
-        "row": 1,
+        "row": 3,
         "size_x": 10,
         "size_y": 2,
         "type": "visualization"
@@ -37,9 +37,9 @@
           "vitals.swap.percent"
         ],
         "id": "hm_agent_heartbeat",
-        "row": 6,
-        "size_x": 10,
-        "size_y": 4,
+        "row": 8,
+        "size_x": 12,
+        "size_y": 6,
         "sort": [
           "@timestamp",
           "desc"
@@ -49,7 +49,7 @@
       {
         "col": 5,
         "id": "hm_agent_heartbeat-vitals.mem.percent",
-        "row": 3,
+        "row": 5,
         "size_x": 3,
         "size_y": 3,
         "type": "visualization"
@@ -57,18 +57,26 @@
       {
         "col": 1,
         "id": "hm_agent_hearbeat-vitals.cpu.user",
-        "row": 3,
+        "row": 5,
         "size_x": 4,
         "size_y": 3,
         "type": "visualization"
       },
       {
+        "col": 8,
         "id": "hm_agent_hearbeat-disk-usage-percent",
-        "type": "visualization",
+        "row": 5,
         "size_x": 3,
         "size_y": 3,
-        "col": 8,
-        "row": 3
+        "type": "visualization"
+      },
+      {
+        "id": "hm_agent_hearbeat-non-running-jobs",
+        "type": "visualization",
+        "size_x": 10,
+        "size_y": 2,
+        "col": 1,
+        "row": 1
       }
     ]
 ENDOFFJSON
@@ -79,6 +87,24 @@ ENDOFFJSON
     "searchSourceJSON": "<%= JSON.parse(<<'ENDOFFJSON').to_json.gsub(/"/) { '\"' }
     {
       "filter": [
+        {
+          "meta": {
+            "index": "[logstash-]YYYY.MM.DD",
+            "key": "job_state",
+            "value": "failing",
+            "disabled": true,
+            "negate": false,
+            "apply": true
+          },
+          "query": {
+            "match": {
+              "job_state": {
+                "query": "failing",
+                "type": "phrase"
+              }
+            }
+          }
+        },
         {
           "query": {
             "query_string": {

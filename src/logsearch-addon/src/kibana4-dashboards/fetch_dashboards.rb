@@ -75,6 +75,7 @@ export_kibana_config es_host, 'config' ,'4.1.1'
 # BOSH Health Monitor 
 export_kibana_config es_host, 'dashboard', 'Health-Monitor-Heartbeats'
 export_kibana_config es_host, 'visualization', 'hm_agent_hearbeat-disk-usage-percent'
+export_kibana_config es_host, 'visualization', 'hm_agent_hearbeat-non-running-jobs'
 export_kibana_config es_host, 'visualization', 'hm_agent_hearbeat-jobs-and-job_state'
 export_kibana_config es_host, 'visualization', 'hm_agent_hearbeat-vitals.cpu.user'
 export_kibana_config es_host, 'visualization', 'hm_agent_heartbeat-job-load'
