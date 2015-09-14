@@ -4,5 +4,8 @@ set -u # report the usage of uninitialized variables
 # $BOSH_COMPILE_TARGET - where this package & spec'd source files are available
 # $BOSH_INSTALL_TARGET - where you copy/install files to be included in package
 
-cp -R $BOSH_COMPILE_TARGET $BOSH_INSTALL_TARGET
+find $BOSH_COMPILE_TARGET
 
+cp $BOSH_COMPILE_TARGET/logsearch-addon/target/kibana4-dashboards.json $BOSH_INSTALL_TARGET/kibana4-dashboards.json
+
+find $BOSH_INSTALL_TARGET

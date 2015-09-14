@@ -2,7 +2,7 @@
 
 set -e
 
-ES_URL="http://<% p('elasticsearch.host')%>:<% p('elasticsearch.port')%>"
+ES_URL="http://<%= p('elasticsearch.host')%>:<%= p('elasticsearch.port')%>"
 
 #
 # wait for elasticsearch availability
@@ -25,5 +25,5 @@ done
 # Send Kibana4 config as single bulk request
 #
 
-cat var/vcap/packages/kibana4_setup/kibana4-dashboards.json | curl --data-binary @- $ES_URL/_bulk
+cat /var/vcap/packages/kibana4_setup/kibana4-dashboards.json | curl --data-binary @- $ES_URL/_bulk
 
