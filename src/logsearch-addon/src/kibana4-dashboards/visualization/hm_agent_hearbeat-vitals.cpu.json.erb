@@ -1,6 +1,6 @@
 <% require 'json' %>
 {
-  "title": "hm_agent_hearbeat - vitals.cpu.user",
+  "title": "hm_agent_hearbeat - vitals.cpu",
   "visState": "<%= JSON.parse(<<'ENDOFFJSON').to_json.gsub(/"/) { '\"' }
     {
       "type": "line",
@@ -24,6 +24,14 @@
         }
       },
       "aggs": [
+        {
+          "id": "4",
+          "type": "max",
+          "schema": "metric",
+          "params": {
+            "field": "vitals.cpu.sys"
+          }
+        },
         {
           "id": "1",
           "type": "max",
@@ -54,6 +62,14 @@
             "size": 50,
             "order": "desc",
             "orderBy": "1"
+          }
+        },
+        {
+          "id": "5",
+          "type": "max",
+          "schema": "metric",
+          "params": {
+            "field": "vitals.cpu.wait"
           }
         }
       ],
