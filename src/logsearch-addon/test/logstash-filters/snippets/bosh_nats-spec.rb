@@ -25,12 +25,13 @@ describe LogStash::Filters::Grok do
         insist { subject["tags"] } == ["hm_agent_heartbeat"]
         insist { subject["@type"] } == "NATS"
        
-        insist { subject["job_and_index"] } == "router-partition-7c53ed3ae2e7f5543b91/0"
-        insist { subject["job"] } == "router-partition-7c53ed3ae2e7f5543b91" 
-        insist { subject["index"] } == 0 
-        insist { subject["job_state"] } == "running"
+        insist { subject["@source"]["job_and_index"] } == "router-partition-7c53ed3ae2e7f5543b91/0"
+        insist { subject["@source"]["job"] } == "router-partition-7c53ed3ae2e7f5543b91" 
+        insist { subject["@source"]["index"] } == 0 
 
-        insist { subject["vitals"] } == {
+        insist { subject["NATS"]["job_state"] } == "running"
+
+        insist { subject["NATS"]["vitals"] } == {
 					"cpu" => {
 						     "sys" => 0.0,
 						    "user" => 0.1,
