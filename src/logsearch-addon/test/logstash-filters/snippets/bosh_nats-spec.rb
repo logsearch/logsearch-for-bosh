@@ -21,7 +21,7 @@ describe LogStash::Filters::Grok do
 
 #        puts subject.to_hash.to_yaml
 
-        insist { subject["@tags"] } == ["hm_agent_heartbeat", "NATS"]
+        insist { subject["tags"] } == ["NATS", "hm_agent_heartbeat"]
         insist { subject["@metadata"]["type"] } == "NATS"
         insist { subject["@level"] } == "INFO"
 
@@ -77,7 +77,7 @@ describe LogStash::Filters::Grok do
 
 # puts subject.to_hash.to_yaml
 
-        insist { subject["@tags"] } == ["hm_alert", "NATS" ]
+        insist { subject["tags"] } == [ "NATS", "hm_alert" ]
         insist { subject["@metadata"]["type"] } == "NATS"
 		insist { subject["@timestamp"] } == Time.iso8601("2015-10-08T14:33:28.000Z") 
 		insist { subject["@level"] } == "WARN"
